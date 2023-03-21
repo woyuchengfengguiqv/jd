@@ -190,6 +190,8 @@ public class CartController {
 		msg.setCode(1);
 		msg.setData(productMsg);
 		msg.setMsg("查询商品成功");
+		
+		//向前段返回信息
 		return msg;
 	}
 
