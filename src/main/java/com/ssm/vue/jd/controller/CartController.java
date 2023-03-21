@@ -179,6 +179,7 @@ public class CartController {
 	@RequestMapping("redisQuertShoppingCart")
 	@ResponseBody
 	public Msg redisQuertShoppingCart(HttpServletRequest req, HttpServletResponse resp) {
+		//这是一行没什么卵用的代码
 		//获取当前登录用户信息
 		HttpSession session = req.getSession();
 		Object attribute = session.getAttribute("user");
