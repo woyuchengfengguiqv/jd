@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 指定实现类的接口 -->
+<mapper namespace="com.ssm.vue.jd.dao.OrderDao">
+
+	<!-- 查询收货地址信息 -->
+	<select id="getAddress" resultType="com.ssm.vue.jd.pojo.Address">
+		SELECT address_id,`name` ,address,phone FROM address WHERE user_id = #{user_id}
+	</select>
+	
+	<!-- 生成订单(未完成订单) -->
+	<insert id="createOrder">
+INSERT INTO `order`(order_id,user_id,build_date,order_price,order_state,total,recipient_name,recipient_address,recipient_phone)
+VALUES(#{order_id},#{user_id},now(),#{order_price},#{order_state},#{total},#{recipient_name},#{recipient_address},#{recipient_phone})
+	</insert>
+	
+		<insert id="createOrder1" parameterType="com.ssm.vue.jd.pojo.Order">
+INSERT INTO `order`(order_id,user_id,build_date,order_price,order_state,total,recipient_name,recipient_address,recipient_phone)
+VALUES(#{order_id},#{user_id},now(),#{order_price},#{order_state},#{total},#{recipient_name},#{recipient_address},#{recipient_phone})
+	</insert>
+	
+   
+	<!-- 向订单商品详情表插入数据 -->
+	<insert id="insertOrderGoodsByOrder">
+INSERT INTO order_goods(order_id,order_commodity_name,order_amount,order_commodity_price,total_price,img_url)
+VALUES(#{order_id},#{order_commodity_name},#{order_amount},#{order_commodity_price},#{total_price},#{img_url})
+	</insert>
+	
+	<!-- 向订单商品详情表插入数据 -->
+	<insert id="insertOrderGoodsByOrder1" parameterType="com.ssm.vue.jd.pojo.OrderGoods">
+INSERT INTO order_goods(order_id,order_commodity_name,order_amount,order_commodity_price,total_price,img_url)
+VALUES(#{order_id},#{order_commodity_name},#{order_amount},#{order_commodity_price},#{total_price},#{img_url})
+	</insert>
+	
+	<!-- 根据订单编号查询订单详细信息的方法 -->
+	<select id="getOrderById" parameterType="com.ssm.vue.jd.pojo.Order" resultType="com.ssm.vue.jd.pojo.Order">
+		SELECT order_id,user_id,build_date,order_price,recipient_name,recipient_address,recipient_phone 
+FROM `order` WHERE order_id=#{order_id}
+	</select>
+	
+	<!-- 根据订单编号查询订单商品详情的方法 -->
+	<select id="getOrderGoodsByOrderId" parameterType="com.ssm.vue.jd.pojo.Order" resultType="com.ssm.vue.jd.pojo.OrderGoods">
+	SELECT order_amount,order_commodity_name,order_commodity_price,order_goods_id,total_price,img_url FROM order_goods 
+	WHERE order_id=#{order_id}
+	
+	</select>
+	
+	<!-- 完成订单的方法 -->
+	<update id="completeOrder" parameterType="com.ssm.vue.jd.pojo.Order">
+		UPDATE `order` SET order_state = 1 ,payment_time=NOW(),receiving_time = #{receiving_time} WHERE order_id = #{order_id}
+	</update>
+	
+	<resultMap type="com.ssm.vue.jd.pojo.Order" id="orderMap">
+		<result column="order_id" property="order_id"/>
+		<result column="user_id" property="user_id"/>
+		
+		<result column="build_date" property="build_date"/>
+		<result column="order_price" property="order_price"/>
+		<result column="order_state" property="order_state"/>
+		<result column="total" property="total"/>
+		<result column="payment_time" property="payment_time"/>
+		<result column="receiving_time" property="receiving_time"/>
+		<result column="recipient_name" property="recipient_name"/>
+		<result column="recipient_address" property="recipient_address"/>
+		<result column="recipient_phone" property="recipient_phone"/>
+
+		<collection property="commodityList" ofType="com.ssm.vue.jd.pojo.OrderGoods">
+			<result column="order_goods_id" property="order_goods_id"/>
+			<result column="commodity_id" property="commodity_id"/>
+			<result column="order_commodity_name" property="order_commodity_name"/>
+			<result column="order_amount" property="order_amount"/>
+			<result column="order_commodity_price" property="order_commodity_price"/>
+			<result column="total_price" property="total_price"/>
+			<result column="img_url" property="img_url"/>
+		</collection>
+	</resultMap>
+	
+	<!-- 根据订单编号查询订单信息 -->
+	<select id="getOrderByOrder_id"  resultMap="orderMap">
+	SELECT 
+ `order`.order_id,`order`.user_id,`order`.build_date,`order`.order_price,`order`.order_state,
+ `order`.total,`order`.payment_time,`order`.receiving_time,`order`.recipient_name,`order`.recipient_address,
+ `order`.recipient_phone,order_goods.order_goods_id,order_goods.order_commodity_name,order_goods.order_amount,
+ order_goods.order_commodity_price,order_goods.total_price,order_goods.img_url
+FROM `order` LEFT JOIN order_goods ON `order`.`order_id` = order_goods.`order_id` 
+WHERE `order`.order_id = #{order_id}
+	</select>
+	
+	<!-- 查询当前用户的所有订单编号 -->
+	<select id="getAllOrder_id" parameterType="int" resultType="long">
+		SELECT order_id FROM `order` WHERE `order`.user_id = #{user_id}
+	</select>
+	
+	
+	<!-- 查询当前用户的所有订单信息 -->
+	<select id="getAllOrder" parameterType="int" resultMap="orderMap">
+	SELECT 
+ `order`.order_id,`order`.user_id,`order`.build_date,`order`.order_price,`order`.order_state,
+ `order`.total,`order`.payment_time,`order`.receiving_time,`order`.recipient_name,`order`.recipient_address,
+ `order`.recipient_phone,order_goods.order_goods_id,order_goods.order_commodity_name,order_goods.order_amount,
+ order_goods.order_commodity_price,order_goods.total_price,order_goods.img_url
+FROM `order` LEFT JOIN order_goods ON `order`.`order_id` = order_goods.`order_id` 
+WHERE `order`.user_id = #{user_id}
+	</select>
+	
+</mapper>

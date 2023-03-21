@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 指定实现类的接口 -->
+<mapper namespace="com.ssm.vue.jd.dao.CartDao">
+
+	<!-- 向购物车添加商品 -->
+	<insert id="addProductToCart" parameterType="com.ssm.vue.jd.pojo.Cart">
+INSERT INTO cart(user_id,commodity_id,`count`,`timestamp`,selected)
+VALUES(#{user_id},#{commodity_id},#{count},now(),0)
+	</insert>
+	
+	<!-- 查询高商品是否已经被用户加入购物车，返回商品数量 -->
+	<select id="existsCommodity" parameterType="com.ssm.vue.jd.pojo.Cart" resultType="int">
+SELECT IFNULL(MAX(`count`),0) FROM cart WHERE user_id = #{user_id} AND commodity_id = #{commodity_id}
+	</select>
+	
+	<!-- 修改购物车商品数量 -->
+	<update id="updateCart" parameterType="com.ssm.vue.jd.pojo.Cart">
+UPDATE cart SET `count` = #{count} WHERE user_id = #{user_id} AND commodity_id = #{commodity_id}
+	</update>	
+	
+	
+	<resultMap type="com.ssm.vue.jd.pojo.Cart" id="cart">
+		<result column="cart_id" property="cart_id"/>
+		<result column="commodity_id" property="commodity_id"/>
+		<result column="count" property="count"/>
+		<result column="timestramp" property="timestramp"/>
+		<result column="selected" property="selected"/>
+		<association property="commodity" javaType="com.ssm.vue.jd.pojo.Commodity">
+			<result column="commodity_name" property="commodity_name"/>
+			<result column="commodity_info" property="commodity_info"/>
+			<result column="commodity_price" property="commodity_price"/>
+			<result column="brand" property="brand"/>
+			<result column="place" property="place"/>
+			<result column="stock" property="stock"/>
+			<result column="img_url" property="img_url"/>
+		</association>
+	</resultMap>
+	
+	<!-- 查询当前用户的购物车商品信息 -->
+	<select id="queryCartByUser" parameterType="com.ssm.vue.jd.pojo.User" resultMap="cart">
+		SELECT 
+ cart.cart_id,cart.commodity_id,cart.`count`,cart.`timestamp`,
+ cart.selected,commodity.commodity_name,commodity.commodity_info,commodity.commodity_price,commodity.brand,
+ commodity.place,commodity.stock,commodity.img_url
+FROM cart LEFT JOIN commodity ON cart.`commodity_id` = commodity.`commodity_id` WHERE cart.`user_id` = #{user_id}
+	</select>
+	
+	
+	
+	
+</mapper>

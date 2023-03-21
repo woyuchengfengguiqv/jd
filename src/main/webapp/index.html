@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+	<form action=\ "https://openapi.alipaydev.com/gateway.do" method="post">
+		<input type='hidden' name='app_id' value='2016102600761423' /><input
+			type='hidden' name='biz_content'
+			value='{"out_trade_no":"2303160611100500000","total_amount":714.00,"subject":"order payment","product_code":"QUICK_WAP_WAY","quit_url":"http://localhost:8080/httpclient/select","return_url":"http://localhost:8080/httpclient/select","notify_url":"http://localhost:8080/httpclient/select"}' /><input
+			type='hidden' name='charset' value='gbk' /><input type='hidden'
+			name='method' value='alipay.trade.wap.pay' /><input type='hidden'
+			name='notify_url' value='http://47.94.220.67:10001/aliH5Callback' /><input
+			type='hidden' name='return_url'
+			value='http://localhost:8080/httpclient/select' /><input
+			type='hidden' name='sign'
+			value='JDXJCyX1B9AAWKw94DvFRc3pvIEe8sWmZ7fT1KBSkVI66u66Qe0/rnc+OpFK7xcXs/syjfr0DAvud/+qMG9TlEv3XJ542nCa+kvW4xZQuoYixkueUaschRbjafOkZtRY5U6BvZB/sNneD3YquBZi6xyGQLiWy99boYzgKTwuZclMxUalakzNLx8a8P4s/uaBq7syeAES/mFyrq/PMbDQ9Ew/DP5BeyEHSkAKBbGLqkEkeC8zH8Ija5BUcZajXjdpDtlF5IhuLNNeY1LzRDgZEkrZk41BLgs//ikRKlYMdjY0CK8Bo9HmC+8V3kkWZJ/DarMe8D7ylFFYcUepxQalng==' /><input
+			type='hidden' name='sign_type' value='RSA2' /><input
+			type='hidden' name='timestamp' value='2023-03-16 18:15:18' /><input
+			type='hidden' name='version' value='1.0' /><input type='submit'
+			value='支付' />
+		<script type='text/javascript'>
+			document.forms[0].submit()
+		</script>
+	</form>
+</body>
+</html>

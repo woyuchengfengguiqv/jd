@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xmlns:mvc="http://www.springframework.org/schema/mvc"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        ">
+        
+        
+        <!-- 扫描包和子包 -->
+        <context:component-scan base-package="com.ssm.vue.jd.controller"/>
+        
+       <!-- 不处理静态资源  -->
+       <mvc:default-servlet-handler/>
+       
+       <!-- 如果要使用注解必须要使用以下配置 -->
+       <mvc:annotation-driven/>
+       
+       
+       <!-- MVC注册拦截器 -->   
+   <mvc:interceptors>
+   		<mvc:interceptor>
+   			<!-- 映射要拦截的请求 -->
+   			<mvc:mapping path="/**"/>
+   			<!-- 映射放行路径 -->
+   			<!-- 不拦截的请求 -->
+			<mvc:exclude-mapping path="/login"/>
+			<mvc:exclude-mapping path="/queryCommodityController"/>
+			<mvc:exclude-mapping path="/queryCommodityById"/>
+			<mvc:exclude-mapping path="/register"/>
+			<mvc:exclude-mapping path="/completeOrder"/>
+   			<!-- 配置具体的拦截器类 -->
+   			<bean class="com.ssm.vue.jd.util.LoginInterceptor"></bean>
+   			
+   			
+   		</mvc:interceptor>
+   	</mvc:interceptors>
+ 
+</beans>

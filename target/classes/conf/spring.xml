@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xmlns:mvc="http://www.springframework.org/schema/mvc"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+	
+	<!-- 扫描组件 -->
+	<context:component-scan base-package="com.ssm.vue.jd"></context:component-scan>
+	<!-- 注册aop面向切面编程必须进行以下配置 -->
+	<aop:aspectj-autoproxy/>
+	
+	<!-- 打开注解，哪个方法支持事务在哪个方法打上注解即可 -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	<!-- 事务控制器（动态代理），不需要我们自己实现，配置上即可 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<!-- 配置数据库连接池 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="jdbc:mysql://localhost:3306/jd?timeZone=Asia/Shanghai"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="root"></property> 
+		<!-- 设置连接池中的连接开启事务 -->
+		<!-- <property name="defaultAutoCommit" value="false"></property> -->
+	</bean>
+	
+	<!-- 需要一个sqlSessionFactory，因为生成session时需要sqlSessionFactory -->
+	<!-- 它需要两个东西，连接池，因为需要拿到连接，还需要指定mapper配置文件的位置，也可以指定配置文件的位置 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value="classpath:conf/mybatis-config.xml"/>
+		<property name="mapperLocations" value="classpath:mapper/*.xml"/>
+		
+	</bean>
+	
+	
+	<!-- 直接用动态代理生成实现类，告诉sqlSessiondao层的位置即可，他会根据接口生成实现类 -->
+	<!-- Mapper和dao是一个意思 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+		<property name="basePackage" value="com.ssm.vue.jd.dao"></property>
+	</bean>
+	
+	
+</beans>

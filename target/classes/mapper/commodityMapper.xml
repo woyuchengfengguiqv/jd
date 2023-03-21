@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 指定实现类的接口 -->
+<mapper namespace="com.ssm.vue.jd.dao.CommodityDao">
+
+	<select id="queryAllCommodity" resultType="com.ssm.vue.jd.pojo.Commodity">
+	SELECT commodity_id,commodity_name,commodity_info,commodity_price,brand,place,stock,img_url
+FROM commodity LIMIT #{firstIndex},#{pageSize}
+	</select>
+	
+	<select id="getCount" resultType="int">
+		SELECT COUNT(1) FROM commodity
+	</select>
+	
+	<!-- 根据商品编号查询商品 -->
+	<select id="queryCommodityById" parameterType="com.ssm.vue.jd.pojo.Commodity" resultType="com.ssm.vue.jd.pojo.Commodity">
+	SELECT commodity_id,commodity_name,commodity_info,commodity_price,brand,place,stock,img_url FROM commodity 
+	WHERE commodity_id = #{commodity_id}
+	</select>
+	
+	<!-- 根据商品编号查询商品库存 -->
+	<select id="getStock" resultType="int">
+	SELECT stock FROM commodity WHERE commodity_id = #{commodity_id}
+	</select>
+	
+	
+	<!-- 减库存的方法 -->
+	<update id="subtractStock">
+	UPDATE commodity SET stock = #{stock} WHERE commodity_id = #{commodity_id} 
+	</update>
+	
+	<update id="subtractStock1" parameterType="int">
+	UPDATE commodity SET stock = #{stock} WHERE commodity_id = #{commodity_id} 
+	</update>
+	
+	
+	
+	<!-- 根据商品编号查询商品 -->
+	<select id="getCommodityById" resultType="com.ssm.vue.jd.pojo.Commodity" parameterType="list">
+SELECT commodity_id,commodity_name,commodity_info,commodity_price,brand,place,stock,img_url FROM commodity
+	<where>
+		commodity_id in 
+		<foreach item="item" collection="list" separator="," open="(" close=")" index="">
+			#{item.commodity_id}
+		</foreach>
+	</where>
+	</select>
+	
+	<!-- 根据商品编号查询唯一商品信息 -->
+	<select id="getOnlyCommodityById" parameterType="int" resultType="com.ssm.vue.jd.pojo.Commodity">
+SELECT commodity_id,commodity_name,commodity_info,commodity_price,brand,place,stock,img_url FROM commodity WHERE commodity_id=#{commodity_id}
+	</select>
+</mapper>

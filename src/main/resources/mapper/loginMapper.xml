@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 指定实现类的接口 -->
+<mapper namespace="com.ssm.vue.jd.dao.LoginDao">
+
+    <!-- 用户登录 -->
+	<select id="login" parameterType="com.ssm.vue.jd.pojo.User" resultType="com.ssm.vue.jd.pojo.User">
+		  SELECT user_id,user_name FROM  `user` WHERE user_name = #{user_name} AND user_pass = #{user_pass} 
+	</select>
+	
+	<!-- 写入最后登录时间 -->
+	<update id="lastLoginTime" parameterType="com.ssm.vue.jd.pojo.User">
+		UPDATE  `user` SET `last_login_date` = NOW() WHERE `user_id`=#{user_id}
+	</update>
+	
+	
+	
+</mapper>
