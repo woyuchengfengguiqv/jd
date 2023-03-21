@@ -181,6 +181,7 @@ public class CartController {
 	public Msg redisQuertShoppingCart(HttpServletRequest req, HttpServletResponse resp) {
 		//获取当前登录用户信息
 		HttpSession session = req.getSession();
+		//这也是一行没什么卵用的代码
 		Object attribute = session.getAttribute("user");
 		LinkedHashMap<String, Object> user = (LinkedHashMap<String, Object>) attribute;
 		int user_id = (Integer)user.get("user_id");
